@@ -1,5 +1,4 @@
 using Microsoft.Extensions.Logging;
-using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
@@ -14,7 +13,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Vanara.PInvoke;
 using Windows.Graphics;
 using Windows.System;
 
@@ -52,9 +50,7 @@ public sealed partial class UpdateContentWindow : WindowEx
         }
         SystemBackdrop = new DesktopAcrylicBackdrop();
         AdaptTitleBarButtonColorToActuallTheme();
-        nint hInstance = Kernel32.GetModuleHandle(null).DangerousGetHandle();
-        nint hIcon = User32.LoadIcon(hInstance, "#32512").DangerousGetHandle();
-        AppWindow.SetIcon(Win32Interop.GetIconIdFromIcon(hIcon));
+        SetIcon();
         CenterInScreen();
     }
 

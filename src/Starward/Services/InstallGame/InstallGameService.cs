@@ -267,7 +267,10 @@ internal abstract class InstallGameService
                 await DecompressAndApplyDiffPackagesAsync(cancellationTokenSource.Token).ConfigureAwait(false);
             }
 
-            DecompressBilibiliServerGameSDK();
+            if (!IsPreInstall)
+            {
+                DecompressBilibiliServerGameSDK();
+            }
 
             await ClearDeprecatedFilesAsync().ConfigureAwait(false);
 
@@ -321,6 +324,12 @@ internal abstract class InstallGameService
         {
             _logger.LogWarning("Game resource is null.");
             throw new Exception(Lang.DownloadGameService_AlreadyTheLatestVersion);
+        }
+        Version? localVersion = await _gameLauncherService.GetLocalGameVersionAsync(CurrentGameBiz, InstallPath);
+        Version? latestVersion = await _gameLauncherService.GetLatestGameVersionAsync(CurrentGameBiz);
+        if (gamePackage.PreDownload is not null && localVersion >= latestVersion)
+        {
+            IsPreInstall = true;
         }
 
         var list_package = new List<DownloadFileTask>();

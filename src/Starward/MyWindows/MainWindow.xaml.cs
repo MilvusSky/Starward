@@ -10,7 +10,6 @@ using Starward.Controls;
 using Starward.Models;
 using System;
 using System.Diagnostics;
-using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -78,7 +77,7 @@ public sealed partial class MainWindow : WindowEx
         ChangeWindowSize();
         AdaptTitleBarButtonColorToActuallTheme();
         SetDragRectangles(new RectInt32(0, 0, 100000, (int)(48 * UIScale)));
-        AppWindow.SetIcon(Path.Combine(AppContext.BaseDirectory, @"Assets\logo.ico"));
+        SetIcon();
         WTSRegisterSessionNotification(WindowHandle, 0);
         if (AppWindow.Presenter is OverlappedPresenter presenter)
         {

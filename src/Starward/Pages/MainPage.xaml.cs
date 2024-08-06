@@ -206,14 +206,21 @@ public sealed partial class MainPage : PageBase
 
 
 
-    private void GameBizSelector_GameBizChanged(object sender, GameBiz biz)
+    private void GameBizSelector_GameBizChanged(object sender, (GameBiz biz, bool doubleTapped) args)
     {
-        _logger.LogInformation("Change game region to {gamebiz}", biz);
-        CurrentGameBiz = biz;
+        _logger.LogInformation("Change game region to {gamebiz}", args.biz);
+        CurrentGameBiz = args.biz;
         UpdateNavigationViewItemsText();
-        NavigateTo(MainPage_Frame.SourcePageType);
+        if (args.doubleTapped)
+        {
+            NavigateTo(typeof(GameLauncherPage));
+        }
+        else
+        {
+            NavigateTo(MainPage_Frame.SourcePageType);
+        }
         _ = UpdateBackgroundImageAsync();
-        AppConfig.CurrentGameBiz = biz;
+        AppConfig.CurrentGameBiz = args.biz;
     }
 
 
@@ -628,7 +635,7 @@ public sealed partial class MainPage : PageBase
             MainPage_NavigationView.SelectedItem = NavigationViewItem_Launcher;
         }
         _logger.LogInformation("Navigate to {page} with param {param}", destPage, param ?? CurrentGameBiz);
-        MainPage_Frame.Navigate(page, param ?? CurrentGameBiz, new DrillInNavigationTransitionInfo());
+        MainPage_Frame.Navigate(page, param ?? CurrentGameBiz);
         if (destPage is nameof(GameLauncherPage))
         {
             PlayVideo();

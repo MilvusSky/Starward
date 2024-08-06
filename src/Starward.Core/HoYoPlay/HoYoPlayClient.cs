@@ -124,7 +124,7 @@ public class HoYoPlayClient
     {
         string url = BuildUrl("getAllGameBasicInfo", launcherId, language) + $"&game_id={gameId.Id}";
         var list = await CommonGetAsync<List<GameBackgroundInfo>>(url, "game_info_list", cancellationToken);
-        return list.FirstOrDefault();
+        return list.FirstOrDefault(x => x.GameId == gameId);
     }
 
 
@@ -194,7 +194,7 @@ public class HoYoPlayClient
     {
         string url = BuildUrl("getGamePackages", launcherId, language) + $"&game_ids[]={gameId.Id}";
         var list = await CommonGetAsync<List<GamePackage>>(url, "game_packages", cancellationToken);
-        return list.FirstOrDefault();
+        return list.FirstOrDefault(x => x.GameId == gameId);
     }
 
 
@@ -234,7 +234,7 @@ public class HoYoPlayClient
         string url = BuildUrl("getGameChannelSDKs", launcherId, language);
         foreach (var gameId in gameIds)
         {
-            url += $"&game_id[]={gameId.Id}";
+            url += $"&game_ids[]={gameId.Id}";
         }
         if (LauncherId.IsBilibili(launcherId))
         {
@@ -259,7 +259,7 @@ public class HoYoPlayClient
     /// <exception cref="miHoYoApiException"></exception>
     public async Task<GameChannelSDK?> GetGameChannelSDKAsync(string launcherId, string language, GameId gameId, CancellationToken cancellationToken = default)
     {
-        string url = BuildUrl("getGameChannelSDKs", launcherId, language) + $"&game_id[]={gameId.Id}";
+        string url = BuildUrl("getGameChannelSDKs", launcherId, language) + $"&game_ids[]={gameId.Id}";
         if (LauncherId.IsBilibili(launcherId))
         {
             url += "&channel=14&sub_channel=0";
@@ -269,7 +269,7 @@ public class HoYoPlayClient
             url += "&channel=1&sub_channel=1";
         }
         var list = await CommonGetAsync<List<GameChannelSDK>>(url, "game_channel_sdks", cancellationToken);
-        return list.FirstOrDefault();
+        return list.FirstOrDefault(x => x.GameId == gameId);
     }
 
 
@@ -310,7 +310,7 @@ public class HoYoPlayClient
         string url = BuildUrl("getGameDeprecatedFileConfigs", launcherId, language);
         foreach (var gameId in gameIds)
         {
-            url += $"&game_id[]={gameId.Id}";
+            url += $"&game_ids[]={gameId.Id}";
         }
         if (LauncherId.IsBilibili(launcherId))
         {
@@ -335,7 +335,7 @@ public class HoYoPlayClient
     /// <exception cref="miHoYoApiException"></exception>
     public async Task<GameDeprecatedFileConfig?> GetGameDeprecatedFileConfigAsync(string launcherId, string language, GameId gameId, CancellationToken cancellationToken = default)
     {
-        string url = BuildUrl("getGameDeprecatedFileConfigs", launcherId, language) + $"&game_id[]={gameId.Id}";
+        string url = BuildUrl("getGameDeprecatedFileConfigs", launcherId, language) + $"&game_ids[]={gameId.Id}";
         if (LauncherId.IsBilibili(launcherId))
         {
             url += "&channel=14&sub_channel=0";
@@ -345,7 +345,7 @@ public class HoYoPlayClient
             url += "&channel=1&sub_channel=1";
         }
         var list = await CommonGetAsync<List<GameDeprecatedFileConfig>>(url, "deprecated_file_configs", cancellationToken);
-        return list.FirstOrDefault();
+        return list.FirstOrDefault(x => x.GameId == gameId);
     }
 
 
@@ -378,7 +378,7 @@ public class HoYoPlayClient
         string url = BuildUrl("getGameConfigs", launcherId, language);
         foreach (var gameId in gameIds)
         {
-            url += $"&game_id[]={gameId.Id}";
+            url += $"&game_ids[]={gameId.Id}";
         }
         return await CommonGetAsync<List<GameConfig>>(url, "launch_configs", cancellationToken);
     }
@@ -395,9 +395,9 @@ public class HoYoPlayClient
     /// <exception cref="miHoYoApiException"></exception>
     public async Task<GameConfig?> GetGameConfigAsync(string launcherId, string language, GameId gameId, CancellationToken cancellationToken = default)
     {
-        string url = BuildUrl("getGameConfigs", launcherId, language) + $"&game_id[]={gameId.Id}";
+        string url = BuildUrl("getGameConfigs", launcherId, language) + $"&game_ids[]={gameId.Id}";
         var list = await CommonGetAsync<List<GameConfig>>(url, "launch_configs", cancellationToken);
-        return list.FirstOrDefault();
+        return list.FirstOrDefault(x => x.GameId == gameId);
     }
 
 
@@ -430,7 +430,7 @@ public class HoYoPlayClient
         string url = BuildUrl("getGameBranches", launcherId, language);
         foreach (var gameId in gameIds)
         {
-            url += $"&game_id[]={gameId.Id}";
+            url += $"&game_ids[]={gameId.Id}";
         }
         return await CommonGetAsync<List<GameBranch>>(url, "game_branches", cancellationToken);
     }
@@ -448,9 +448,9 @@ public class HoYoPlayClient
     /// <exception cref="miHoYoApiException"></exception>
     public async Task<GameBranch?> GetGameBranchAsync(string launcherId, string language, GameId gameId, CancellationToken cancellationToken = default)
     {
-        string url = BuildUrl("getGameBranches", launcherId, language) + $"&game_id[]={gameId.Id}";
+        string url = BuildUrl("getGameBranches", launcherId, language) + $"&game_ids[]={gameId.Id}";
         var list = await CommonGetAsync<List<GameBranch>>(url, "game_branches", cancellationToken);
-        return list.FirstOrDefault();
+        return list.FirstOrDefault(x => x.GameId == gameId);
     }
 
 
@@ -480,6 +480,38 @@ public class HoYoPlayClient
         url += $"&branch={gameBranchPackage.Branch}&package_id={gameBranchPackage.PackageId}&password={gameBranchPackage.Password}";
         return await CommonGetAsync<GameChunkBuild>(url, cancellationToken);
     }
+
+
+
+
+    /// <summary>
+    /// Chunk 下载模式清单
+    /// </summary>
+    /// <param name="gameBranch"></param>
+    /// <param name="gameBranchPackage"></param>
+    /// <param name="version"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
+    public async Task<GameChunkBuild> GetGameChunkBuildAsync(GameBranch gameBranch, GameBranchPackage gameBranchPackage, string version, CancellationToken cancellationToken = default)
+    {
+        string? url = null;
+        if (gameBranch.GameId.ToGameBiz().IsChinaServer())
+        {
+            url = "https://api-takumi.mihoyo.com/downloader/sophon_chunk/api/getBuild?plat_app=ddxf5qt290cg";
+        }
+        if (gameBranch.GameId.ToGameBiz().IsGlobalServer())
+        {
+            url = "https://sg-public-api.hoyoverse.com/downloader/sophon_chunk/api/getBuild?plat_app=ddxf6vlr1reo";
+        }
+        if (url is null)
+        {
+            throw new ArgumentOutOfRangeException(nameof(gameBranch), $"Unknown game biz ({gameBranch.GameId.Biz}).");
+        }
+        url += $"&branch={gameBranchPackage.Branch}&package_id={gameBranchPackage.PackageId}&password={gameBranchPackage.Password}&tag={version}";
+        return await CommonGetAsync<GameChunkBuild>(url, cancellationToken);
+    }
+
 
 
 

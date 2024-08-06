@@ -4,7 +4,6 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Starward.Pages.Welcome;
 using Starward.Services;
 using System;
-using System.IO;
 using Vanara.PInvoke;
 using Windows.Graphics;
 
@@ -47,7 +46,7 @@ public sealed partial class WelcomeWindow : WindowEx
         ChangeWindowSize(AppConfig.WindowSizeMode);
         AdaptTitleBarButtonColorToActuallTheme();
         SetDragRectangles(new RectInt32(0, 0, 10000, (int)(48 * UIScale)));
-        AppWindow.SetIcon(Path.Combine(AppContext.BaseDirectory, @"Assets\logo.ico"));
+        SetIcon();
         if (AppWindow.Presenter is OverlappedPresenter presenter)
         {
             presenter.IsMaximizable = false;

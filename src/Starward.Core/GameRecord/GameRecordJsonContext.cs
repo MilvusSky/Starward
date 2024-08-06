@@ -1,5 +1,6 @@
 ﻿using Starward.Core.GameRecord.Genshin.SpiralAbyss;
 using Starward.Core.GameRecord.Genshin.TravelersDiary;
+using Starward.Core.GameRecord.StarRail.ApocalypticShadow;
 using Starward.Core.GameRecord.StarRail.ForgottenHall;
 using Starward.Core.GameRecord.StarRail.PureFiction;
 using Starward.Core.GameRecord.StarRail.SimulatedUniverse;
@@ -19,6 +20,7 @@ namespace Starward.Core.GameRecord;
 [JsonSerializable(typeof(miHoYoApiWrapper<ForgottenHallInfo>))]
 [JsonSerializable(typeof(miHoYoApiWrapper<ForgottenHallTime>))]
 [JsonSerializable(typeof(miHoYoApiWrapper<PureFictionInfo>))]
+[JsonSerializable(typeof(miHoYoApiWrapper<ApocalypticShadowInfo>))]
 [JsonSerializable(typeof(miHoYoApiWrapper<SimulatedUniverseInfo>))]
 [JsonSerializable(typeof(miHoYoApiWrapper<SimulatedUniverseTime>))]
 [JsonSerializable(typeof(miHoYoApiWrapper<DeviceFpResult>))]

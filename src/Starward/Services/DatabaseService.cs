@@ -608,9 +608,27 @@ internal class DatabaseService
         CREATE INDEX IF NOT EXISTS IX_ZZZGachaItem_RankType ON ZZZGachaItem (RankType);
         CREATE INDEX IF NOT EXISTS IX_ZZZGachaItem_GachaType ON ZZZGachaItem (GachaType);
 
-        PRAGMA USER_VERSION = 8;
+        CREATE TABLE IF NOT EXISTS ApocalypticShadowInfo
+        (
+            Uid           INTEGER NOT NULL,
+            ScheduleId    INTEGER NOT NULL,
+            BeginTime     TEXT    NOT NULL,
+            EndTime       TEXT    NOT NULL,
+            UpperBossIcon TEXT    NOT NULL,
+            LowerBossIcon TEXT    NOT NULL,
+            StarNum       INTEGER NOT NULL,
+            MaxFloor      TEXT,
+            BattleNum     INTEGER NOT NULL,
+            HasData       INTEGER NOT NULL,
+            Value         TEXT    NOT NULL,
+            PRIMARY KEY (Uid, ScheduleId)
+        );
+        CREATE INDEX IF NOT EXISTS IX_ApocalypticShadowInfo_ScheduleId ON ApocalypticShadowInfo (ScheduleId);
+
+        PRAGMA USER_VERSION = 9;
         COMMIT TRANSACTION;
         """;
+
 
     #endregion
 
